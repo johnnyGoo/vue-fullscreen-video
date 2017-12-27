@@ -68,13 +68,13 @@
                 this.$emit('stop', this);
             },
             updateSize: function () {
-                var width = this.parent.clientWidth;
-                var height = this.parent.clientHeight;
-                var radio = width / height;
-                var cut_w = this.video.videoWidth;
-                var cut_h = this.video.videoHeight;
-                var radio2 = cut_w / cut_h;
-                var end_w, end_h;
+                let width = this.parent.clientWidth;
+                let height = this.parent.clientHeight;
+                let radio = width / height;
+                let cut_w = this.video.videoWidth;
+                let cut_h = this.video.videoHeight;
+                let radio2 = cut_w / cut_h;
+                let end_w, end_h;
 
                 switch (this.align) {
                     case 'crop':
@@ -107,7 +107,7 @@
 
 
         mounted: function () {
-            var self = this;
+            let self = this;
             this.parent = this.$refs.parent;
             this.video = this.$refs.video;
             //console.log(this.$refs.video)
