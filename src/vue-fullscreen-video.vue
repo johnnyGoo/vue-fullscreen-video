@@ -1,7 +1,8 @@
 <template>
     <div ref="parent" style="width: 100%;height: 100%;overflow: hidden">
         <video ref="video" playsinline :src="url" x5-video-player-type="h5"
-        x5-video-player-fullscreen="true" preload="auto"  >
+               x5-video-player-fullscreen="true" x5-playsinline="true" webkit-playsinline="true" preload="auto"
+               :autoplay="autoplay">
 
         </video>
 
@@ -24,6 +25,8 @@
 * Copyright 2013-2016 Johnny chen
 */
 <script>
+
+    let isAndriod = navigator.userAgent.indexOf('Android') > -1;
 
     // 注册
     export default {
@@ -53,18 +56,49 @@
         },
         data: function () {
             return {
-                playing: false, video: null, parent: null
+                playing: false, video: null, parent: null, checkForAndroid: null
             }
         },
         methods: {
-            play: function (url) {
+
+            playUrl: function (url) {
+                if (url !== this.url) {
+                    this.video.pause();
+                    this.url = url;
+                    this.video.load();
+                    this.playing = false;
+                    let self = this;
+
+                    function autoPlay() {
+                        try {
+                            self.video.play()
+                        } catch (err) {
+                            //console.log('playfail')
+                        }
+                        self.video.play()
+                    }
+
+                    setTimeout(autoPlay, 100)
+
+                } else {
+
+                }
+
+
+            },
+
+            play: function () {
                 this.playing = true;
-                this.$refs.video.play();
+                this.video.play();
                 this.$emit('play', this);
+                this.updateSize();
+
 
             },
             stop: function () {
+
                 this.playing = false;
+                this.video.pause();
                 this.$emit('stop', this);
             },
             updateSize: function () {
@@ -75,6 +109,7 @@
                 let cut_h = this.video.videoHeight;
                 let radio2 = cut_w / cut_h;
                 let end_w, end_h;
+
 
                 switch (this.align) {
                     case 'crop':
@@ -105,7 +140,12 @@
             }
         },
 
-
+        beforeDestroy: function () {
+            let self = this;
+            if (isAndriod) {
+                clearInterval(self.updateSize);
+            }
+        },
         mounted: function () {
             let self = this;
             this.parent = this.$refs.parent;
@@ -114,19 +154,35 @@
             this.video.oncanplay = function () {
                 self.$emit('canplay');
                 self.updateSize();
+                if (self.autoPlay) {
+                    setTimeout(self.play, 10)
+                    //self.play()
+
+                }
             };
+            this.video.onended = function () {
+                self.$emit('onended');
+                if (self.loop === true) {
+                    self.video.play()
+                } else {
+                    self.stop()
+                }
+            };
+
+            if (isAndriod) {
+                self.checkForAndroid = setInterval(self.updateSize, 500);
+            }
+
+
             window.onresize = function () {
                 self.updateSize();
             };
-            if (false===this.scroll) {
+            if (false === this.scroll) {
                 this.parent.setAttribute('ontouchmove', 'event.preventDefault();');
             }
 
             // this.enableInlineVideo(this.$refs.video)
             //  this.updateFrame(this.frame);
-            if (this.autoPlay) {
-                this.play()
-            }
 
 
         }
