@@ -13,7 +13,7 @@ import VueFullscreenVideo from 'vue-fullscreen-video'
 
 ###props:
 ```
-align:String 'align'/'default'
+align:String 'crop'/'default'
 url:String '' //视频地址
 loop:Boolean true/false //是否循环
 autoPlay:Boolean true/false //是否自动播放
