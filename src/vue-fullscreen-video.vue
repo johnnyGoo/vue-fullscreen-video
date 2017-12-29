@@ -5,10 +5,10 @@
                x5-video-player-fullscreen="true" :loop="loop" x5-playsinline="true" webkit-playsinline="true"
                preload="auto" :autoplay="autoPlay">
         </video>
-        <transition v-if="display_poster" name="fade" :duration="fadeTime">
-            <div style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover"
+
+            <div  v-if="display_poster" style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover"
                  :style="{'background-image':'url('+poster+')'}"></div>
-        </transition>
+
 
     </div>
 </template>
@@ -20,13 +20,6 @@
         width: 5px;
     }
 
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .3s
-    }
-
-    .fade-enter, .fade-leave-to {
-        opacity: 0
-    }
 </style>
 
 
@@ -76,10 +69,6 @@
             poster: {
                 type: String,
                 default: ""
-            },
-            fadeTime: {
-                type: Number,
-                default: 300
             }
         },
         data: function () {
