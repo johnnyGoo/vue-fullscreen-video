@@ -5,9 +5,9 @@
                x5-video-player-fullscreen="true" :loop="loop" x5-playsinline="true" webkit-playsinline="true"
                preload="auto" :autoplay="autoPlay">
         </video>
-        <transition v-if="display_poster" name="fade"  :duration="fadeTime">
-        <div  style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover"
-             :style="{'background-image':'url('+poster+')'}"></div>
+        <transition v-if="display_poster" name="fade" :duration="fadeTime">
+            <div style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover"
+                 :style="{'background-image':'url('+poster+')'}"></div>
         </transition>
 
     </div>
@@ -19,9 +19,11 @@
         pointer-events: none;
         width: 5px;
     }
+
     .fade-enter-active, .fade-leave-active {
         transition: opacity .3s
     }
+
     .fade-enter, .fade-leave-to {
         opacity: 0
     }
@@ -75,14 +77,19 @@
                 type: String,
                 default: ""
             },
-            fadeTime:{
+            fadeTime: {
                 type: Number,
                 default: 300
             }
         },
         data: function () {
             return {
-                playing: false, stoped:true,video: null, parent: null, display_poster: true, eventRemoveHandle: function () {
+                playing: false,
+                stoped: true,
+                video: null,
+                parent: null,
+                display_poster: true,
+                eventRemoveHandle: function () {
 
                 }
             }
@@ -118,9 +125,9 @@
             play: function () {
                 this.playing = true;
                 this.display_poster = false;
-                if(this.stoped){
-                    this.stoped=false
-                    this.video.currentTime=0;
+                if (this.stoped) {
+                    this.stoped = false
+                    this.video.currentTime = 0;
                     this.video.play();
                 }
                 this.video.play();
@@ -129,7 +136,7 @@
 
 
             },
-            pause:function () {
+            pause: function () {
                 this.playing = false;
                 this.video.pause();
                 this.$emit('pause', this);
@@ -140,8 +147,8 @@
                 this.display_poster = true;
                 this.playing = false;
                 this.video.pause();
-                this.stoped=true;
-               // this.video.currentTime=0;
+                this.stoped = true;
+                // this.video.currentTime=0;
 
                 this.$emit('stop', this);
             },
@@ -204,6 +211,9 @@
             this.video.onended = function () {
                 self.$emit('onended');
                 self.update();
+                if (self.loop !== true) {
+                    self.stop()
+                }
                 // if (self.loop === true) {
                 //     self.video.play()
                 // } else {
