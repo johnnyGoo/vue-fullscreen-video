@@ -29,17 +29,23 @@
         padding: 10px;
         float: left;
         margin-left: 5px;
+        margin-top: 5px;
     }
 </style>
 <body>
 <div id="app" >
-    <vue-fullscreen-video  @play="log('play')" @stop="log('stop')"  @canplay="log('canplay')" ref="player"
+    <vue-fullscreen-video :auto-play="false" @play="log('play')" @stop="log('stop')"  @canplay="log('canplay')" ref="player"
                            align="crop"
-                          url="http://2017christmascard.amway.com.cn/media/vava.mp4"></vue-fullscreen-video>
+                          url="http://2017christmascard.amway.com.cn/media/vava.mp4"
+    poster="http://h5.2smart.cn/2017/sharp/images/index_bg.jpg"
+    >
+
+    </vue-fullscreen-video>
     <div class="pa">
         <div class="btn" @click="playUrl('http://2017christmascard.amway.com.cn/media/vava.mp4')">PlayVideoOne</div>
-        <div class="btn" @click="playUrl('http://static.smartisanos.cn/common/video/t1-ui.mp4')">PlayVideoTow</div>
+        <div class="btn" @click="playUrl('http://static.smartisanos.cn/common/video/t1-ui.mp4')">PlayVideoTwo</div>
         <div class="btn" @click="play()">Play</div>
+        <div class="btn" @click="pause()">Pause</div>
         <div class="btn" @click="stop()">Stop</div>
     </div>
 </div>
@@ -54,7 +60,7 @@
             frame: 5, frames: frames, width: 640, frameTime: 20, state: 'stop', loop: true, forward: true,
             page: 1, show: false, movies: [{current: 0.5}]
         }, mounted: function () {
-            this.$refs.player.play();
+            //this.$refs.player.play();
         },
         methods: {
             log: function (msg) {
@@ -65,6 +71,9 @@
             },
             play:function () {
                 this.$refs.player.play();
+            },
+            pause:function () {
+                this.$refs.player.pause();
             },
             stop:function (url) {
                 this.$refs.player.stop();

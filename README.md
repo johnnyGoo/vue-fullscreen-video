@@ -18,14 +18,16 @@ url:String '' //视频地址
 loop:Boolean true/false //是否循环
 autoPlay:Boolean true/false //是否自动播放
 scroll:Boolean false/true //是否允许浏览器默认滑动
+poster:String  '' //图片 用于开始前和结束后显示
 
 
 ```
 ###methods
 ```
 play()
+pause()
 stop()
-updateSize()
+update()
 
 ```
 ###properties

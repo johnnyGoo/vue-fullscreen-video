@@ -1,8 +1,10 @@
 <template>
     <div ref="parent" style="width: 100%;height: 100%;overflow: hidden">
+        <div v-if="display_poster" style="width: 100%;height:100%;background-size: cover"
+             :style="{'background-image':'url('+poster+')'}"></div>
         <video ref="video" playsinline :src="url" x5-video-player-type="h5"
-               x5-video-player-fullscreen="true" x5-playsinline="true" webkit-playsinline="true" preload="auto"
-               :autoplay="autoplay">
+               x5-video-player-fullscreen="true" :loop="loop" x5-playsinline="true" webkit-playsinline="true" preload="auto"
+               :autoplay="autoPlay">
 
         </video>
 
@@ -18,15 +20,23 @@
 </style>
 
 
-/*!
-* vue-keyframe-animation v0.0.1 (https://github.com/johnnyGoo/vue-movieclip)
-* Author: Johnny chen
-*
-* Copyright 2013-2016 Johnny chen
-*/
 <script>
 
-    let isAndriod = navigator.userAgent.indexOf('Android') > -1;
+
+    function bindEvent(dom, event, cb, useCapture) {
+        function remove() {
+            dom.removeEventListener(event, icc, useCapture)
+        }
+
+        function icc(e) {
+            if (cb(e) === true) {
+                remove();
+            }
+        }
+
+        dom.addEventListener(event, icc, useCapture);
+        return remove;
+    }
 
     // 注册
     export default {
@@ -52,11 +62,17 @@
             scroll: {
                 type: Boolean,
                 default: false
+            },
+            poster: {
+                type: String,
+                default: ""
             }
         },
         data: function () {
             return {
-                playing: false, video: null, parent: null, checkForAndroid: null
+                playing: false, video: null, parent: null, display_poster: true, eventRemoveHandle: function () {
+
+                }
             }
         },
         methods: {
@@ -89,19 +105,29 @@
 
             play: function () {
                 this.playing = true;
+                this.display_poster = false;
                 this.video.play();
                 this.$emit('play', this);
-                this.updateSize();
+                this.update();
 
 
             },
-            stop: function () {
-
+            pause:function () {
                 this.playing = false;
                 this.video.pause();
+                this.$emit('pause', this);
+                this.update();
+            },
+
+            stop: function () {
+                this.display_poster = true;
+                this.playing = false;
+                this.video.pause();
+                this.video.currentTime=0;
+
                 this.$emit('stop', this);
             },
-            updateSize: function () {
+            update: function () {
                 let width = this.parent.clientWidth;
                 let height = this.parent.clientHeight;
                 let radio = width / height;
@@ -142,10 +168,9 @@
 
         beforeDestroy: function () {
             let self = this;
-            if (isAndriod) {
-                clearInterval(self.updateSize);
-            }
+            self.eventRemoveHandle();
         },
+
         mounted: function () {
             let self = this;
             this.parent = this.$refs.parent;
@@ -153,15 +178,16 @@
             //console.log(this.$refs.video)
             this.video.oncanplay = function () {
                 self.$emit('canplay');
-                self.updateSize();
-                if (self.autoPlay) {
-                    setTimeout(self.play, 10)
-                    //self.play()
+                self.update();
 
+                if (self.autoPlay === true) {
+
+                    setTimeout(self.play, 10)
                 }
             };
             this.video.onended = function () {
                 self.$emit('onended');
+                self.update();
                 if (self.loop === true) {
                     self.video.play()
                 } else {
@@ -169,22 +195,14 @@
                 }
             };
 
-            if (isAndriod) {
-                self.checkForAndroid = setInterval(self.updateSize, 500);
-            }
+            self.eventRemoveHandle = bindEvent(window, 'resize', function () {
+                self.update();
+                setTimeout(self.update, 300)
+            });
 
-
-            window.onresize = function () {
-                self.updateSize();
-            };
             if (false === this.scroll) {
                 this.parent.setAttribute('ontouchmove', 'event.preventDefault();');
             }
-
-            // this.enableInlineVideo(this.$refs.video)
-            //  this.updateFrame(this.frame);
-
-
         }
 
 
