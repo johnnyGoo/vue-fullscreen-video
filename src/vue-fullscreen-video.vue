@@ -1,12 +1,15 @@
 <template>
     <div ref="parent" style="width: 100%;height: 100%;overflow: hidden">
-        <div v-if="display_poster" style="width: 100%;height:100%;background-size: cover"
-             :style="{'background-image':'url('+poster+')'}"></div>
+
         <video ref="video" playsinline :src="url" x5-video-player-type="h5"
                x5-video-player-fullscreen="true" :loop="loop" x5-playsinline="true" webkit-playsinline="true" preload="auto"
                :autoplay="autoPlay">
 
         </video>
+        <transition v-if="display_poster" name="fade"  :duration="fadeTime">
+        <div  style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover"
+             :style="{'background-image':'url('+poster+')'}"></div>
+        </transition>
 
     </div>
 </template>
@@ -16,6 +19,12 @@
         opacity: 0;
         pointer-events: none;
         width: 5px;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .3s
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+        opacity: 0
     }
 </style>
 
@@ -66,6 +75,10 @@
             poster: {
                 type: String,
                 default: ""
+            },
+            fadeTime:{
+                type: Number,
+                default: 300
             }
         },
         data: function () {
