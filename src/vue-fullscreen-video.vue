@@ -86,26 +86,27 @@
         methods: {
 
             playUrl: function (url) {
+                let self = this;
                 if (url !== this.url) {
                     this.video.pause();
                     this.url = url;
                     this.video.load();
                     this.playing = false;
-                    let self = this;
+
 
                     function autoPlay() {
                         try {
-                            self.video.play()
+                            self.play()
                         } catch (err) {
                             //console.log('playfail')
                         }
-                        self.video.play()
+                        //self.video.play()
                     }
 
                     setTimeout(autoPlay, 100)
 
                 } else {
-
+                    self.play()
                 }
 
 
