@@ -6,7 +6,7 @@
                preload="auto" :autoplay="autoPlay">
         </video>
 
-            <div  v-if="display_poster" style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover"
+            <div  v-if="display_poster" style="position: absolute;top:0px;left:0px;width: 100%;height:100%;background-size: cover;background-position: center center"
                  :style="{'background-image':'url('+poster+')'}"></div>
 
 
@@ -69,6 +69,9 @@
             poster: {
                 type: String,
                 default: ""
+            },deblug:{
+                type: Boolean,
+                default: true
             }
         },
         data: function () {
@@ -145,6 +148,9 @@
             update: function () {
                 let width = this.parent.clientWidth;
                 let height = this.parent.clientHeight;
+                if(this.deblug){
+                    console.log(this.parent.clientWidth,this.parent.clientHeight)
+                }
                 let radio = width / height;
                 let cut_w = this.video.videoWidth;
                 let cut_h = this.video.videoHeight;
@@ -176,8 +182,9 @@
 
                 this.video.width = end_w;
                 this.video.height = end_h;
-                this.video.style.marginLeft = -(end_w - width) / 2 + 'px';
-                this.video.style.marginTop = -(end_h - height) / 2 + 'px';
+                this.video.style.position='absolute'
+                this.video.style.left = -(end_w - width) / 2 + 'px';
+                this.video.style.top = -(end_h - height) / 2 + 'px';
             }
         },
 

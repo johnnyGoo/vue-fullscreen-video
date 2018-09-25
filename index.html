@@ -34,15 +34,15 @@
 </style>
 <body>
 <div id="app" >
-    <vue-fullscreen-video :auto-play="false" @play="log('play')" @stop="log('stop')"  @canplay="log('canplay')" ref="player"
-                           align="crop" :loop="false"
-                          url="http://2017christmascard.amway.com.cn/media/vava.mp4"
+    <vue-fullscreen-video align="center" :auto-play="false" @play="log('play')" @stop="log('stop')"  @canplay="log('canplay')" ref="player"
+                            :loop="false"
+                          url="http://demo.df/v2.mp4"
     poster="http://h5.2smart.cn/2017/sharp/images/index_bg.jpg"
     >
 
     </vue-fullscreen-video>
     <div class="pa">
-        <div class="btn" @click="playUrl('http://2017christmascard.amway.com.cn/media/vava.mp4')">PlayVideoOne</div>
+        <div class="btn" @click="playUrl('http://demo.df/v2.mp4')">PlayVideoOne</div>
         <div class="btn" @click="playUrl('http://static.smartisanos.cn/common/video/t1-ui.mp4')">PlayVideoTwo</div>
         <div class="btn" @click="play()">Play</div>
         <div class="btn" @click="pause()">Pause</div>
